@@ -1,58 +1,46 @@
 #include <Arduino.h>
+// Basis-Arduino-Funktionen wie millis(), pinMode(), digitalWrite()
 
-#include "config.h"
-#include "pinout.h"
+#include "global/pins.h"
+// Enthält die Definition von LED_PIN
 
-// =====================================================
-// Mini-Logger (einfach, robust, anfängerfreundlich)
-// =====================================================
-void logLine(const String &msg) {
-  Serial.println(msg);
-}
+#include "global/var.h"
+// Enthält die Variable: unsigned long timer
 
-// =====================================================
-// Blink-Status
-// =====================================================
-bool ledState = false;
-unsigned long lastBlinkMs = 0;
 
-// =====================================================
-// setup(): läuft genau 1x beim Start
-// =====================================================
 void setup() {
-  // Serielle Schnittstelle starten (für Debug-Ausgaben)
-  Serial.begin(SERIAL_BAUD);
+  // setup() läuft genau EINMAL beim Start des Boards
 
-  // Manche Boards brauchen ganz kurz Zeit, bis Serial bereit ist
-  delay(200);
-
-  logLine("=== Start: Vorlage-Projekt (Arduino Nano ESP32) ===");
-
-  // Pin für LED als Ausgang setzen
-  pinMode(PIN_LED, OUTPUT);
-  digitalWrite(PIN_LED, LOW);
-
-  logLine("Setup fertig.");
+  pinMode(LED_PIN, OUTPUT);
+  // Setzt den LED-Pin als Ausgang
 }
 
-// =====================================================
-// loop(): läuft endlos (Hauptprogramm)
-// =====================================================
+
 void loop() {
-  const unsigned long now = millis();
+  // loop() läuft endlos immer wieder
 
-  // --------- 1) LED-Blink ohne delay() (wichtig für spätere Erweiterungen)
-  if (now - lastBlinkMs >= BLINK_INTERVAL_MS) {
-    lastBlinkMs = now;
+  if (millis() - timer > 500) {
+    // Prüft: Sind mehr als 500 Millisekunden vergangen?
 
-    ledState = !ledState;
-    digitalWrite(PIN_LED, ledState ? HIGH : LOW);
-
-    // Debug-Ausgabe
-    logLine(String("LED: ") + (ledState ? "ON" : "OFF"));
+    digitalWrite(LED_PIN, HIGH);
+    // LED einschalten
   }
 
-  // --------- 2) Platzhalter für spätere Module
-  // Hier kannst du später Sensoren abfragen, Buttons lesen, etc.
-  // Wichtig: möglichst ohne lange delay()-Aufrufe arbeiten.
+  if (millis() - timer > 1000) {
+    // Prüft: Sind mehr als 1000 Millisekunden vergangen?
+
+    digitalWrite(LED_PIN, LOW);
+    // LED ausschalten
+
+    timer = millis();
+    // Aktuelle Zeit speichern → neuer Blink-Zyklus startet
+  }
+
+  if (timer > millis()) {
+    // Schutz gegen Überlauf von millis()
+    // Falls millis() wieder bei 0 beginnt
+
+    timer = 0;
+    // Timer zurücksetzen
+  }
 }
