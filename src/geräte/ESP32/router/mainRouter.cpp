@@ -1,5 +1,5 @@
 #include "geräte/ESP32/router/mainRouter.h"
-#include "geräte/ESP32/controller/status.h"
+#include "geräte/ESP32/controller/ArduinoNanoESP32/status/status.h"
 
 // ----------------------------------------------
 // Hier wird nur "verdrahtet":
