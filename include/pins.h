@@ -1,16 +1,9 @@
 #pragma once
-#include <Arduino.h>
+#include <Arduino.h> // Arduino Grundfunktionen
 
-// =====================
-// Allgemein
-// =====================
+// Baudrate für Serial Monitor
 static const uint32_t SERIAL_BAUD = 115200;
 
-// =====================
-// Pins
-// =====================
-// Built-in LED vom Board
-static const int PIN_LED = LED_BUILTIN;
+static const int PIN_LED = LED_BUILTIN;   // eingebaute Board-LED
+static const int PIN_RELAY = D2;          // Test-Ausgang an D2 (später PC-Powertaster/Relais/Transistor)
 
-// Optional (für später, SD-Karte etc.)
-// static const int PIN_SD_CS = 10;

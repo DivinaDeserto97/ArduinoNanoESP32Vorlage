@@ -1,45 +1,51 @@
-#include <Arduino.h>                       // Grundfunktionen des Arduino (Pins, millis, etc.)
-#include "ArduinoNanoESP32/debug/logger.h" // Dein eigenes Logger-System für Console-Ausgaben
+#include <Arduino.h>                                  // Arduino Grundfunktionen
+#include "ArduinoNanoESP32/debug/logger.h"            // Logger
 
+#include "pins.h"                                     // Pins + Baudrate
+#include "secrets.h"                                  // WLAN Daten
+#include "config.h"                                   // DEVICE_NAME + Intervalle
 
-#include "pins.h"                          // Die Pin Variabeln
-#include "secrets.h"                       // Die geheimnisse
+#include "ArduinoNanoESP32/Wlan/wifi_manager.h"       // WLAN Manager
+#include "ArduinoNanoESP32/Wlan/Server/server.h"      // HTTP Server
 
-const int LED_PIN = PIN_LED;              // Speichert die Pin-Nummer aus der pins.h in der eingebauten LED
+const int LED_PIN = PIN_LED;                          // LED Pin aus pins.h
 
-unsigned long lastUptime = 0;             // Speichert die Zeit des letzten Updates in Millisekunden
-bool led = false;                         // Speichert den aktuellen Zustand der LED (AN oder AUS)
+unsigned long lastUptime = 0;                         // Zeitpunkt für 1-Sekunden-Takt
+bool led = false;                                     // LED Zustand
 
 void setup() {
-  pinMode(LED_PIN, OUTPUT);               // Setzt den LED-Pin als Ausgang (damit wir ihn steuern können)
-  digitalWrite(LED_PIN, LOW);             // Schaltet die LED am Anfang aus
+  pinMode(LED_PIN, OUTPUT);                           // LED Pin als Ausgang setzen
+  digitalWrite(LED_PIN, LOW);                         // LED am Anfang aus
 
-  Serial.begin(SERIAL_BAUD);              // Startet die USB-Serielle Verbindung mit der Baudrate aus pins.h
-  while (!Serial) { delay(10); }          // Wartet, bis die Verbindung zum PC hergestellt ist
+  Serial.begin(SERIAL_BAUD);                          // Startet USB-Seriell mit Baudrate aus pins.h
+  while (!Serial) { delay(10); }                      // Wartet bis PC verbunden ist
 
-  Log::begin(true);                       // Startet den Logger (true = farbige Ausgabe im Terminal)
+  Log::begin(true);                                   // Logger starten (mit Farben)
 
-  Log::info("System gestartet");          // Gibt eine Info-Meldung aus: System wurde gestartet
-  Log::successf("LED_PIN = %d", LED_PIN);// Gibt aus, welcher Pin für die LED verwendet wird
+  Log::info("System gestartet");                      // Startmeldung
+  Log::infof("Device: %s", DEVICE_NAME);              // Gerätename aus config.h
+  Log::infof("Serial Baudrate: %lu", SERIAL_BAUD);    // Zeigt verwendete Baudrate
+  Log::successf("LED_PIN = %d", LED_PIN);             // Zeigt LED Pin
+
+  WifiManager::begin();                               // WLAN starten
 }
 
 void loop() {
-  unsigned long now = millis();           // Holt die aktuelle Laufzeit seit dem Start in Millisekunden
 
-  // Prüft, ob 1000 ms (1 Sekunde) seit dem letzten Update vergangen sind
+  WifiManager::update();                              // WLAN prüfen + reconnect
+  HttpServer::handle();                               // HTTP Server bedienen (/status)
+
+  unsigned long now = millis();                       // aktuelle Laufzeit
+
+  // jede Sekunde
   if (now - lastUptime >= 1000) {
+    lastUptime = now;                                 // Referenzzeit aktualisieren
+    Log::infof("Uptime: %lu ms", now);                // Uptime loggen
 
-    lastUptime = now;                     // Speichert die aktuelle Zeit als neuen Referenzpunkt
+    led = !led;                                       // LED Zustand umschalten
+    digitalWrite(LED_PIN, led ? HIGH : LOW);          // LED entsprechend setzen
 
-    Log::infof("Uptime: %lu ms", now);   // Gibt die aktuelle Laufzeit im Terminal aus
-
-    led = !led;                           // Wechselt den LED-Zustand (AN wird AUS, AUS wird AN)
-
-    digitalWrite(LED_PIN, led ? HIGH : LOW); // Schaltet die LED entsprechend ein oder aus
-
-    if (led)                              // Prüft, ob die LED jetzt an ist
-      Log::success("Lampe AN");           // Gibt eine Erfolgsmeldung aus: LED ist an
-    else                                  // Wenn LED aus ist
-      Log::warning("Lampe AUS");          // Gibt eine Warnmeldung aus: LED ist aus
+    if (led) Log::success("Lampe AN");                // Log wenn LED an
+    else     Log::warning("Lampe AUS");               // Log wenn LED aus
   }
 }
