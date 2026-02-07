@@ -45,7 +45,7 @@ pio run -t upload
 ## Serieller Monitor (Debug-Ausgaben ansehen)
 
 ```bash
-pio device monitor
+pio device monitor -b 115200
 ```
 
 ⚠️ Wichtig:

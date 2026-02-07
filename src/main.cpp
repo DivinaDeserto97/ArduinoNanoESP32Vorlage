@@ -1,36 +1,41 @@
-#include <Arduino.h>
-#include "ArduinoNanoESP32/debug/logger.h"
+#include <Arduino.h>                       // Grundfunktionen des Arduino (Pins, millis, etc.)
+#include "ArduinoNanoESP32/debug/logger.h" // Dein eigenes Logger-System für Console-Ausgaben
 
-const int LED_PIN = LED_BUILTIN;
+const int LED_PIN = LED_BUILTIN;          // Speichert die Pin-Nummer der eingebauten LED
 
-unsigned long lastUptime = 0;
-bool led = false;
+unsigned long lastUptime = 0;             // Speichert die Zeit des letzten Updates in Millisekunden
+bool led = false;                         // Speichert den aktuellen Zustand der LED (AN oder AUS)
 
 void setup() {
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
+  pinMode(LED_PIN, OUTPUT);               // Setzt den LED-Pin als Ausgang (damit wir ihn steuern können)
+  digitalWrite(LED_PIN, LOW);             // Schaltet die LED am Anfang aus
 
-  Serial.begin(115200);
-  while (!Serial) { delay(10); }
+  Serial.begin(115200);                   // Startet die USB-Serielle Verbindung mit 115200 Baud
+  while (!Serial) { delay(10); }          // Wartet, bis die Verbindung zum PC hergestellt ist
 
-  Log::begin(true); // Farben an (false = keine Farbcodes)
+  Log::begin(true);                       // Startet den Logger (true = farbige Ausgabe im Terminal)
 
-  Log::info("System gestartet");
-  Log::successf("LED_PIN = %d", LED_PIN);
+  Log::info("System gestartet");          // Gibt eine Info-Meldung aus: System wurde gestartet
+  Log::successf("LED_PIN = %d", LED_PIN);// Gibt aus, welcher Pin für die LED verwendet wird
 }
 
 void loop() {
-  unsigned long now = millis();
+  unsigned long now = millis();           // Holt die aktuelle Laufzeit seit dem Start in Millisekunden
 
-  // Uptime jede Sekunde
+  // Prüft, ob 1000 ms (1 Sekunde) seit dem letzten Update vergangen sind
   if (now - lastUptime >= 1000) {
-    lastUptime = now;
-    Log::infof("Uptime: %lu ms", now);
 
-    // LED toggeln + loggen
-    led = !led;
-    digitalWrite(LED_PIN, led ? HIGH : LOW);
-    if (led) Log::success("Lampe AN");
-    else     Log::warning("Lampe AUS");
+    lastUptime = now;                     // Speichert die aktuelle Zeit als neuen Referenzpunkt
+
+    Log::infof("Uptime: %lu ms", now);   // Gibt die aktuelle Laufzeit im Terminal aus
+
+    led = !led;                           // Wechselt den LED-Zustand (AN wird AUS, AUS wird AN)
+
+    digitalWrite(LED_PIN, led ? HIGH : LOW); // Schaltet die LED entsprechend ein oder aus
+
+    if (led)                              // Prüft, ob die LED jetzt an ist
+      Log::success("Lampe AN");           // Gibt eine Erfolgsmeldung aus: LED ist an
+    else                                  // Wenn LED aus ist
+      Log::warning("Lampe AUS");          // Gibt eine Warnmeldung aus: LED ist aus
   }
 }

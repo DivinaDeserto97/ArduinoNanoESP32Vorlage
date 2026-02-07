@@ -12,9 +12,9 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/home/tobias/Cloud/Cloud/A_ArbeitenProgrammeUndMariaDB/ArduinoNanoESP32/Vorlage/.pio/build/arduino_nano_esp32/firmware.elf",
+            "executable": "/home/tobislaptop/cloud/Cloud/A_ArbeitenProgrammeUndMariaDB/ArduinoNanoESP32/Vorlage/.pio/build/arduino_nano_esp32/firmware.elf",
             "projectEnvName": "arduino_nano_esp32",
-            "toolchainBinDir": "/home/tobias/.platformio/packages/toolchain-xtensa-esp32s3/bin",
+            "toolchainBinDir": "/home/tobislaptop/.platformio/packages/toolchain-xtensa-esp32s3/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
@@ -25,18 +25,18 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/home/tobias/Cloud/Cloud/A_ArbeitenProgrammeUndMariaDB/ArduinoNanoESP32/Vorlage/.pio/build/arduino_nano_esp32/firmware.elf",
+            "executable": "/home/tobislaptop/cloud/Cloud/A_ArbeitenProgrammeUndMariaDB/ArduinoNanoESP32/Vorlage/.pio/build/arduino_nano_esp32/firmware.elf",
             "projectEnvName": "arduino_nano_esp32",
-            "toolchainBinDir": "/home/tobias/.platformio/packages/toolchain-xtensa-esp32s3/bin",
+            "toolchainBinDir": "/home/tobislaptop/.platformio/packages/toolchain-xtensa-esp32s3/bin",
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "/home/tobias/Cloud/Cloud/A_ArbeitenProgrammeUndMariaDB/ArduinoNanoESP32/Vorlage/.pio/build/arduino_nano_esp32/firmware.elf",
+            "executable": "/home/tobislaptop/cloud/Cloud/A_ArbeitenProgrammeUndMariaDB/ArduinoNanoESP32/Vorlage/.pio/build/arduino_nano_esp32/firmware.elf",
             "projectEnvName": "arduino_nano_esp32",
-            "toolchainBinDir": "/home/tobias/.platformio/packages/toolchain-xtensa-esp32s3/bin",
+            "toolchainBinDir": "/home/tobislaptop/.platformio/packages/toolchain-xtensa-esp32s3/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
         }
