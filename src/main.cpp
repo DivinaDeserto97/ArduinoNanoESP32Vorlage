@@ -1,7 +1,11 @@
 #include <Arduino.h>                       // Grundfunktionen des Arduino (Pins, millis, etc.)
 #include "ArduinoNanoESP32/debug/logger.h" // Dein eigenes Logger-System für Console-Ausgaben
 
-const int LED_PIN = LED_BUILTIN;          // Speichert die Pin-Nummer der eingebauten LED
+
+#include "pins.h"                          // Die Pin Variabeln
+#include "secrets.h"                       // Die geheimnisse
+
+const int LED_PIN = PIN_LED;              // Speichert die Pin-Nummer aus der pins.h in der eingebauten LED
 
 unsigned long lastUptime = 0;             // Speichert die Zeit des letzten Updates in Millisekunden
 bool led = false;                         // Speichert den aktuellen Zustand der LED (AN oder AUS)
@@ -10,7 +14,7 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);               // Setzt den LED-Pin als Ausgang (damit wir ihn steuern können)
   digitalWrite(LED_PIN, LOW);             // Schaltet die LED am Anfang aus
 
-  Serial.begin(115200);                   // Startet die USB-Serielle Verbindung mit 115200 Baud
+  Serial.begin(SERIAL_BAUD);              // Startet die USB-Serielle Verbindung mit der Baudrate aus pins.h
   while (!Serial) { delay(10); }          // Wartet, bis die Verbindung zum PC hergestellt ist
 
   Log::begin(true);                       // Startet den Logger (true = farbige Ausgabe im Terminal)

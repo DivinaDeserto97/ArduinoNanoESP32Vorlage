@@ -1,3 +1,5 @@
 .pio
 
 include/global/geheimnisse.h
+
+include/secrets.h

@@ -1,5 +1,7 @@
 #include "logger.h"   // Bindet die passende Header-Datei ein, damit alle Logger-Funktionen bekannt sind
 #include <stdarg.h>   // Wird benötigt, um Funktionen mit variabler Anzahl an Parametern zu ermöglichen (printf-Stil)
+#include <stdio.h>    // Wird benötigt für vsnprintf (formatierte Text-Ausgabe)
+
 
 namespace Log {       // Beginnt den Log-Namespace, damit alle Logger-Funktionen logisch gruppiert sind
 
